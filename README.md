@@ -1,97 +1,84 @@
-# Arknoid (Java) 
+# 🎮 Arknoid Game
 
-A simple Arknoid-style Java game (student project). Uses the biuoop library (biuoop-1.4.jar). The main entry point is [`Ass5Game`](src/Ass5Game.java).
+![Arknoid Game Banner](https://img.shields.io/badge/Arkanoid-Java%20Game-orange)
+![Java](https://img.shields.io/badge/language-Java-blue)
+![OOP](https://img.shields.io/badge/paradigm-Object%20Oriented-green)
 
-## Requirements
-- JDK 8+ installed
-- biuoop-1.4.jar present in the project root (already referenced by the project files)
-- Apache Ant (optional, recommended for build/run via provided `build.xml`)
+## 🚀 Overview
 
-## Build & Run
+A simple **Arkanoid-style** arcade game implemented in **Java**.  
+Developed as part of an academic project, it demonstrates **Object-Oriented Programming (OOP)** concepts using the `biuoop` graphics library.  
+The player controls a paddle to bounce balls and break all blocks on the screen.
 
-Using Ant (recommended)
-```sh
+## ✨ Features
+
+- **Interactive Gameplay** – Move the paddle with keyboard arrows  
+- **Collision System** – Detects ball hits with walls, blocks, and paddle  
+- **Score Tracking** – Gain points for each block destroyed  
+- **Multiple Objects** – Balls, blocks, paddle, and boundaries  
+- **Game Over & Win Detection** – Ends when all blocks are cleared or all balls are lost  
+
+## 🏗️ Architecture
+
+The project follows modular OOP design and separation of concerns:
+
+```
+├── GameSystem       // Main game logic, loop, and environment
+├── Sprites          // Game objects (Ball, Block, Paddle, ScoreIndicator)
+├── Geometry         // Shapes & motion (Point, Line, Rectangle, Velocity)
+├── Listeners        // Event-based systems for scoring and object removal
+└── Interfaces       // Sprite, Collidable, HitListener, HitNotifier
+```
+
+## 🧩 Core Classes
+
+- **Ass5Game** – Main entry point that starts the game  
+- **Game** – Handles initialization, level setup, and main game loop  
+- **Paddle, Ball, Block** – Main interactive game elements  
+- **ScoreIndicator** – Displays the player’s score  
+
+## 🧠 OOP Principles Demonstrated
+
+- **Abstraction** – Clear contracts via interfaces: `Sprite`, `Collidable`, `HitListener`, `HitNotifier`  
+- **Encapsulation** – Each object manages its own state and exposes only needed methods  
+- **Polymorphism** – The game loop operates on `Sprite` references (draw/update), and collisions are resolved through the `Collidable` interface  
+- **(Minimal) Inheritance** – Concrete types implement shared interfaces; inheritance is kept lean to prefer composition
+
+## 🧩 Design Patterns (lightweight)
+
+- **Observer** – Blocks and other objects notify listeners of hits via `HitNotifier` → `HitListener` (e.g., `BlockRemover`, `BallRemover`, `ScoreTrackingListener`)  
+- **Strategy (via interfaces)** – Different collision behaviors come from distinct `Collidable.hit(...)` implementations (`Block` vs `Paddle`)  
+- **Iterator‑style collection** – `SpriteCollection` centralizes iteration and time updates safely  
+- **Factory‑style helpers** – Object creation is organized in methods like `Game.createABall()`, `Game.createPaddle()`, and `Game.createLevel()`
+
+## 🕹️ Controls
+
+- **← / →** — Move paddle left or right  
+
+## ⚙️ Running the Game
+
+### Requirements
+- **Java JDK 8+**  
+- **biuoop-1.4.jar** in the project root  
+
+### Run with Ant (recommended)
+```bash
 ant run
 ```
-This target depends on `compile` and runs the main class `Ass5Game`. See [build.xml](build.xml).
 
-Manual (javac/java)
-```sh
-# compile
-javac -cp .;biuoop-1.4.jar -d bin src\**\*.java
-
-# run
-java -cp bin;biuoop-1.4.jar Ass5Game
+### Or manually
+-Windows (CMD/PowerShell)
+```bash
+mkdir bin
+javac -cp ".;biuoop-1.4.jar" -d bin -sourcepath src src\Ass5Game.java
+java  -cp "bin;biuoop-1.4.jar" Ass5Game
+```
+-macOS / Linux
+```bash
+mkdir -p bin
+javac -cp ".:biuoop-1.4.jar" -d bin -sourcepath src src/Ass5Game.java
+java  -cp "bin:biuoop-1.4.jar" Ass5Game
 ```
 
-## Project structure (source files)
-- [Ass5Game.java](src/Ass5Game.java)
-- GameSystem/
-  - [CollisionInfo.java](src/GameSystem/CollisionInfo.java)
-  - [Counter.java](src/GameSystem/Counter.java)
-  - [Game.java](src/GameSystem/Game.java)
-  - [GameEnvironment.java](src/GameSystem/GameEnvironment.java)
-  - [SpriteCollection.java](src/GameSystem/SpriteCollection.java)
-- Geometry/
-  - [Line.java](src/Geometry/Line.java)
-  - [Point.java](src/Geometry/Point.java)
-  - [Rectangle.java](src/Geometry/Rectangle.java)
-  - [Velocity.java](src/Geometry/Velocity.java)
-- Interfaces/
-  - [Collidable.java](src/Interfaces/Collidable.java)
-  - [HitListener.java](src/Interfaces/HitListener.java)
-  - [HitNotifier.java](src/Interfaces/HitNotifier.java)
-  - [Sprite.java](src/Interfaces/Sprite.java)
-- Listeners/
-  - [BallRemover.java](src/Listeners/BallRemover.java)
-  - [BlockRemover.java](src/Listeners/BlockRemover.java)
-  - [ScoreTrackingListener.java](src/Listeners/ScoreTrackingListener.java)
-- Sprites/
-  - [Ball.java](src/Sprites/Ball.java)
-  - [Block.java](src/Sprites/Block.java)
-  - [Paddle.java](src/Sprites/Paddle.java)
-  - [ScoreIndicator.java](src/Sprites/ScoreIndicator.java)
-- Project files:
-  - [.gitignore](.gitignore)
-  - [build.xml](build.xml)
-  - [ex_5.iml](ex_5.iml)
-
-## Key classes & responsibilities (links to source)
-- [`Ass5Game`](src/Ass5Game.java) — main entry point.
-- [`GameSystem.Game`](src/GameSystem/Game.java) — game setup, main loop, object creation.
-- [`GameSystem.GameEnvironment`](src/GameSystem/GameEnvironment.java) — holds collidables and finds collisions.
-- [`GameSystem.SpriteCollection`](src/GameSystem/SpriteCollection.java) — manages sprites and updates/draws them.
-- [`Sprites.Ball`](src/Sprites/Ball.java) — ball physics, drawing, collision handling.
-- [`Sprites.Block`](src/Sprites/Block.java) — block geometry, drawing, hit notification.
-- [`Sprites.Paddle`](src/Sprites/Paddle.java) — player paddle movement and hit behavior.
-- [`Sprites.ScoreIndicator`](src/Sprites/ScoreIndicator.java) — UI text showing score.
-- Listeners:
-  - [`Listeners.BallRemover`](src/Listeners/BallRemover.java) — removes balls when they hit the death zone.
-  - [`Listeners.BlockRemover`](src/Listeners/BlockRemover.java) — removes broken blocks and updates counters.
-  - [`Listeners.ScoreTrackingListener`](src/Listeners/ScoreTrackingListener.java) — increments score on hits.
-- Geometry utilities:
-  - [`Geometry.Point`](src/Geometry/Point.java), [`Geometry.Line`](src/Geometry/Line.java), [`Geometry.Rectangle`](src/Geometry/Rectangle.java), [`Geometry.Velocity`](src/Geometry/Velocity.java)
-- Interfaces:
-  - [`Interfaces.Sprite`](src/Interfaces/Sprite.java), [`Interfaces.Collidable`](src/Interfaces/Collidable.java), [`Interfaces.HitListener`](src/Interfaces/HitListener.java), [`Interfaces.HitNotifier`](src/Interfaces/HitNotifier.java)
-
-## Gameplay notes & behavior
-- Game window size and constants are set in [`GameSystem.Game`](src/GameSystem/Game.java) (WIDTH = 800, HEIGHT = 600).
-- Levels/blocks are created in `Game.createLevel()`; score sign created in `Game.createScoreSign()`.
-- Ball collisions are resolved by `GameEnvironment.getClosestCollision(...)` and `Collidable.hit(...)`.
-- `SpriteCollection` copies the sprite list before iteration to allow safe add/remove during updates.
-
-## Tips for development
-- To add new levels, modify `Game.createLevel()` or add a level loader.
-- Geometry classes (`Point`, `Line`, `Rectangle`, `Velocity`) are good candidates for unit tests.
-- Keep biuoop-1.4.jar on the classpath during compile/run.
-
-## Files to open quickly
-- Main: [src/Ass5Game.java](src/Ass5Game.java)
-- Game loop and setup: [`GameSystem.Game`](src/GameSystem/Game.java)
-- Collision handling: [`GameSystem.GameEnvironment`](src/GameSystem/GameEnvironment.java)
-- Paddle/Ball/Block: [`Sprites.Paddle`](src/Sprites/Paddle.java), [`Sprites.Ball`](src/Sprites/Ball.java), [`Sprites.Block`](src/Sprites/Block.java)
-
-If you want, I can:
-- produce a shorter quick-start section for VSCode/IntelliJ,
-- generate unit tests skeletons for Geometry classes,
-- or prepare an English README file committed into the repo (this file is ready to save as README.md).
+## 👨‍💻 Author
+Developed by **Ilai Pingle**
